@@ -9,4 +9,4 @@
       db   (mg/get-db conn "monger-test")]
   ;; with a generated document id, returns the complete
   ;; inserted document
-  (mc/insert-and-return db "documents" {:name "John" :age 30})
+  (mc/insert-and-return db "documents" {:name "John" :age 30})) 

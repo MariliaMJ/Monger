@@ -1,4 +1,4 @@
-(ns mongo-test.handler
+(ns mongo_test.handler
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))

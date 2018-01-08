@@ -1,15 +1,52 @@
-(ns mongo-test.handler-test
+(ns mongo_test.handler_test
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
-            [mongo-test.handler :refer :all]
-            [midje.sweet :refer :all]))
+            [mongo_test.handler :refer :all]
+            [midje.sweet :refer :all]
+            [cheshire.core :refer :all]))
 
-(deftest test-app
-  (testing "main route"
-    (let [response (app (mock/request :get "/"))]
-      (is (= (:status response) 200))
-      (is (= (:body response) "Hello World"))))
+(fact "Test POST request to /agents returns expected response"
+  (let [new_agent {:name "Bojack Horseman"
+                   :primary_skillset ["bills-questions"]
+                   :secondary_skillset []}
+        response (app (-> (mock/request :post "/agent")
+                          (mock/content-type "application/json")
+                          (mock/body  (cheshire/generate-string ))))
+        body     (parse-body (:body response))]
+    (is (= (:status response) 200))
+    (is (= body new_agent)))))
 
-  (testing "not-found route"
-    (let [response (app (mock/request :get "/invalid"))]
-      (is (= (:status response) 404)))))
+(fact "Test GET request to /agents returns expected response"
+  (let [new_agent {:name "Bojack Horseman"
+                   :primary_skillset ["bills-questions"]
+                   :secondary_skillset []}
+        response (app (-> (mock/request :get "/agent")))
+        body     (parse-body (:body response))]
+    (is (= (:status response) 200))
+    (is (= (:result body) new_agent))))
+
+(fact "Test POST request to /jobs returns expected response"
+    (let [new_job {:type "Bills questions"
+                 :urgent true}
+        response (app (-> (mock/request :post "/job")
+                          (mock/content-type "application/json")
+                          (mock/body  (cheshire/generate-string ))))
+        body     (parse-body (:body response))]
+    (is (= (:status response) 200))
+    (is (= body new_agent)))))
+
+(fact "Test GET request to /jobs returns expected response"
+  (let [new_job {:type "Bills questions"
+                 :urgent true}
+        response (app (-> (mock/request :get "/job")))
+        body     (parse-body (:body response))]
+    (is (= (:status response) 200))
+    (is (= (:result body) new_job))))               
+
+(fact "Test GET request to /assigned-jobs returns expected response"
+  (let [job_assigned {:job_id id
+                      :agent_id id}
+        response (app (-> (mock/request :get "/job")))
+        body     (parse-body (:body response))]
+    (is (= (:status response) 200))
+    (is (= (:result body) job_assigned)))) 

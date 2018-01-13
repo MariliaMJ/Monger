@@ -13,8 +13,8 @@
                           (mock/content-type "application/json")
                           (mock/body  (cheshire/generate-string ))))
         body     (parse-body (:body response))]
-    (is (= (:status response) 200))
-    (is (= body new_agent)))))
+    (:status response) => 200)
+    (:result body) => new_agent)))
 
 (fact "Test GET request to /agents returns expected response"
   (let [new_agent {:name "Bojack Horseman"
@@ -22,8 +22,8 @@
                    :secondary_skillset []}
         response (app (-> (mock/request :get "/agent")))
         body     (parse-body (:body response))]
-    (is (= (:status response) 200))
-    (is (= (:result body) new_agent))))
+    (:status response) => 200)
+    (:result body) => new_agent))
 
 (fact "Test POST request to /jobs returns expected response"
     (let [new_job {:type "Bills questions"
@@ -32,21 +32,21 @@
                           (mock/content-type "application/json")
                           (mock/body  (cheshire/generate-string ))))
         body     (parse-body (:body response))]
-    (is (= (:status response) 200))
-    (is (= body new_agent)))))
+    (:status response) => 200
+    (:result body) => new_agent)
 
 (fact "Test GET request to /jobs returns expected response"
   (let [new_job {:type "Bills questions"
                  :urgent true}
         response (app (-> (mock/request :get "/job")))
         body     (parse-body (:body response))]
-    (is (= (:status response) 200))
-    (is (= (:result body) new_job))))               
+    (:status response) => 200
+    (:result body) => new_job))              
 
-(fact "Test GET request to /assigned-jobs returns expected response"
+(fact "Test GET request to /assigned-jobs/{:id_agent} returns expected response"
   (let [job_assigned {:job_id id
                       :agent_id id}
         response (app (-> (mock/request :get "/job")))
         body     (parse-body (:body response))]
-    (is (= (:status response) 200))
-    (is (= (:result body) job_assigned)))) 
+    (:status response) => 200
+    (:result body) => job_assigned)) 
